@@ -1,0 +1,71 @@
+<html>
+<head>
+<style>
+body {
+  display:inline-block;
+  transform:scale(1.4,1);
+  -webkit-transform:scale(1.4,1);
+  -moz-transform:scale(1.4,1);
+  -ms-transform:scale(1.4,1);
+  -o-transform:scale(1.4,1);
+  background: #000;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+  var canvas    = document.getElementById("canvas"),
+      context   = canvas.getContext("2d"),
+      drops     = [],
+      text      = [],
+      font_size = 20;
+
+  canvas.height = window.innerHeight;
+  canvas.width  = window.innerWidth;
+  columns       = canvas.width/font_size;;
+
+  context.translate(canvas.width, 0);
+  context.scale(-1, 1);
+
+  //Half-width kana characters, Latin Numbers and Alphabets, in decreasing probability.
+  var chars = '｢｣ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ｢｣ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ｢｣ｦｧｨｩｪｫｬｭｮｯｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ123456789123456789123456789123456789123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  for(var i=0; i<columns; i++)
+    drops[i] = (Math.random()*50)-50; 
+
+  function draw() {
+    // Black background with 0.25 opacity to show the trail.
+    context.font = font_size + "px 'Consolas', 'Lucida Console'";
+    context.fillStyle = "rgba(0, 0, 0, 0.025)";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    //Set the previous line to green so that the trail would remain green.
+    context.fillStyle = "#0F0";
+    for(var i=0; i<drops.length; i++) {
+      context.fillText(text[i], i*font_size, drops[i]*font_size);
+    }
+
+    // Generate new characters and display them, in white.
+    context.fillStyle = "#FFF";
+    for(var i=0; i<drops.length; i++) {
+      drops[i]++;      
+      // Random character to print.
+      text[i] = chars[Math.floor(Math.random()*chars.length)];
+      // Parameters - text, x-pos, y-pos.
+      context.fillText(text[i], i*font_size, drops[i]*font_size);
+
+      // Sending the drop to the top randomly, after it has crossed the screen.
+      if(drops[i]*font_size > canvas.height)
+        drops[i] = (Math.random()*100)-100; 
+    }
+  }
+
+  setInterval(draw, 75);
+  
+  </script>
+</body>
+</html>
